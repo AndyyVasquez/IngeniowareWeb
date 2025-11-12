@@ -1,7 +1,7 @@
 // src/portal/PortalLayout.js
 
 import React from 'react';
-import { Outlet, useNavigate, Link } from 'react-router-dom';
+import { Outlet, useNavigate, Link, NavLink } from 'react-router-dom';
 // import '../css/Portal.css'; // (Necesitarás crear este archivo CSS)
 
 // Este es el "esqueleto" de la sección privada (el dashboard del padre)
@@ -24,10 +24,12 @@ const PortalLayout = () => {
         </div>
         <ul>
           {/* Estos links apuntan a tus rutas privadas */}
-          <li><Link to="/portal/suscripcion">Mi Suscripción</Link></li>
-          <li><Link to="/portal/perfiles">Perfiles de Niños</Link></li>
-          <li><Link to="/portal/cuenta">Mi Cuenta</Link></li>
-          <li><Link to="/portal/progreso">Reportes</Link></li>
+          <li><NavLink to="/portal/suscripcion">Mi Suscripción</NavLink></li>
+          <li><NavLink to="/portal/perfiles">Perfiles de Niños</NavLink></li>
+          <li><NavLink to="/portal/cuenta">Mi Cuenta</NavLink></li>
+          <li><NavLink to="/portal/progreso">Reportes</NavLink></li>
+          <li><NavLink to="/portal/calendario">Calendario</NavLink></li>
+          <li><NavLink to="/portal/recursos">Recursos</NavLink></li>
         </ul>
         <button onClick={handleLogout} className="btn-logout">
           Cerrar Sesión

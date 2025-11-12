@@ -20,9 +20,7 @@ const Hero = () => {
             <Link to="/registro" className="btn-hero-primary">
               Comenzar Gratis
             </Link>
-            <button className="btn-hero-secondary">
-              <FaPlay /> Ver Demo
-            </button>
+          
           </div>
           <p className="hero-note">
             ✨ Sin tarjeta de crédito • Cancela cuando quieras

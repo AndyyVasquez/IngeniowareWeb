@@ -63,9 +63,8 @@ const handleSubmit = async (e) => {
       setIsLoading(false);
       
       // 4. Redirigimos al portal
-      navigate('/portal/perfiles', { replace: true }); // Lo mandamos directo a Perfiles
+      navigate('/portal', { replace: true }); // Lo mandamos directo a Perfiles
       
-      // --- FIN DEL CAMBIO ---
 
     }, 1500);
   };

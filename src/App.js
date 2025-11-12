@@ -8,9 +8,12 @@ import Register from './pages/Register';
 import ProtectedRoute from './components/ProtectedRoute';
 import PortalLayout from './portal/PortalLayout';
 import Suscripcion from './portal/Suscripcion';
+import Dashboard from './portal/Dashboard';
 import Perfiles from './portal/Perfiles'; 
 import Cuenta from './portal/Cuenta';
 import Progreso from './portal/Progreso';
+import Calendario from './portal/Calendario';
+import Recursos from './portal/Recursos';
 
 import './App.css';
 
@@ -22,6 +25,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Register />} />
+        
 
         {/* --- 3. Rutas Privadas (El Portal del Padre) --- */}
         {/* Primero, el Guardia (ProtectedRoute) revisa si hay sesión */}
@@ -30,13 +34,15 @@ function App() {
           <Route path="/portal" element={<PortalLayout />}>
             
             {/* La ruta "/portal" por defecto mostrará Suscripción */}
-            <Route index element={<Suscripcion />} /> 
+            <Route index element={<Dashboard />} /> 
             
             {/* Las sub-rutas */}
             <Route path="suscripcion" element={<Suscripcion />} />
              <Route path="perfiles" element={<Perfiles />} />
              <Route path="cuenta" element={<Cuenta />} /> 
              <Route path="progreso" element={<Progreso />} />
+             <Route path="calendario" element={<Calendario />} />
+             <Route path="recursos" element={<Recursos />} /> 
           </Route>
         </Route>
         

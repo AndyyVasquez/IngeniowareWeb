@@ -514,6 +514,103 @@ input:checked + .slider:before {
   color: #dc3545; /* Rojo */
 }
 
+/* --- Estilos para src/portal/Dashboard.js --- */
+
+.dashboard-grid {
+  display: grid;
+  /* 2 columnas de tamaño flexible */
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 1.5rem;
+}
+
+.dashboard-widget {
+  background: #fff;
+  padding: 1.5rem 2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+  text-decoration: none;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.dashboard-widget:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-widget h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #4B0082;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.dashboard-widget p {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.5;
+}
+
+.widget-link {
+  display: inline-block;
+  margin-top: 1rem;
+  color: #4B0082;
+  font-weight: 600;
+  text-decoration: none;
+}
+.widget-link:hover {
+  text-decoration: underline;
+}
+
+/* Widget de Alertas */
+.dashboard-widget.alert {
+  background-color: #fff6f6;
+  border: 1px solid #f8d7da;
+  color: #721c24;
+}
+.dashboard-widget.alert h3 {
+  color: #c92a2a;
+}
+.dashboard-widget.alert p strong {
+  color: #c92a2a;
+  font-size: 1.1rem;
+}
+
+/* Widget de Niños */
+.widget-child-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.widget-child-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1rem;
+  font-weight: 500;
+}
+.widget-avatar {
+  font-size: 1.5rem;
+  background: #f0e6ff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsivo para el dashboard */
+@media (max-width: 992px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr; /* 1 columna en pantallas pequeñas */
+  }
+}
+
 /* Responsivo para el grid */
 @media (max-width: 992px) {
   .report-grid {
@@ -521,6 +618,250 @@ input:checked + .slider:before {
   }
 }
 
+/* --- Estilos para src/portal/Recursos.js --- */
+
+.portal-recursos-page .recursos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e0e0e0;
+}
+.search-bar .search-icon {
+  color: #999;
+  margin-right: 0.75rem;
+}
+.search-bar input {
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  background: transparent;
+  color: #333;
+}
+.search-bar input::placeholder {
+  color: #999;
+}
+
+.recursos-container {
+  display: grid;
+  grid-template-columns: 240px 1fr; /* Columna lateral y contenido */
+  gap: 2rem;
+}
+
+.recursos-sidebar h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+.recursos-sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.btn-categoria {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+}
+.btn-categoria:hover {
+  background-color: #f3f4f6;
+}
+.btn-categoria.active {
+  background-color: #f0e6ff;
+  color: #4B0082;
+  font-weight: 600;
+}
+.btn-categoria svg {
+  font-size: 1.1rem;
+}
+
+
+/* Grid de tarjetas de artículos */
+.recursos-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columnas de artículos */
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.resource-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+  overflow: hidden; /* Para la imagen */
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+.resource-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.resource-card-image {
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+}
+
+.resource-card-content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.resource-card-categoria {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #4B0082;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.resource-card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 0.75rem 0;
+  line-height: 1.4;
+}
+
+.resource-card-resumen {
+  font-size: 0.95rem;
+  color: #666;
+  line-height: 1.6;
+  flex-grow: 1; /* Empuja el footer hacia abajo */
+  margin: 0;
+}
+
+.resource-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f0f0f0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Responsivo */
+@media (max-width: 1200px) {
+  .recursos-container {
+    grid-template-columns: 1fr; /* 1 columna en pantallas medianas */
+  }
+}
+@media (max-width: 768px) {
+  .recursos-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .search-bar {
+    width: 100%;
+  }
+  .recursos-grid {
+    grid-template-columns: 1fr; /* 1 columna en pantallas pequeñas */
+  }
+}
+/* --- Estilos para src/portal/Calendario.js --- */
+
+/* Contenedor para la página del calendario */
+.portal-calendar-page {
+  /* Permite que el modal ocupe toda la página */
+  position: relative; 
+}
+
+/* Contenedor del calendario */
+.calendar-container {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+}
+
+/* Estilos para los eventos */
+.rbc-event {
+  padding: 4px 8px;
+  font-size: 0.9rem;
+}
+
+/* --- Estilos para el Modal de "Añadir Evento" --- */
+.portal-modal-overlay {
+  position: fixed; /* O 'absolute' si está dentro de .portal-calendar-page */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.portal-modal-card {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.portal-modal-card h3 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #4B0082;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+.portal-modal-card p {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #999;
+  cursor: pointer;
+}
+.modal-close-btn:hover {
+  color: #333;
+}
 
 /* 5. Estilos para la Zona de Peligro */
 .danger-zone {
