@@ -1,0 +1,617 @@
+/* src/css/Portal.css */
+
+/* --- Layout Principal del Portal --- */
+.portal-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f4f7f6; /* Un fondo suave para el dashboard */
+}
+
+.portal-sidebar {
+  width: 260px;
+  background-color: #ffffff;
+  border-right: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+}
+
+.portal-sidebar-header {
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #4B0082; /* Tu color principal */
+}
+
+.portal-sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1; /* Empuja el botón de logout hacia abajo */
+}
+
+.portal-sidebar li a {
+  display: block;
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.portal-sidebar li a:hover {
+  background-color: #f0e6ff; /* Un lila suave */
+  color: #4B0082;
+}
+
+/* (Puedes añadir una clase 'active' con react-router-dom NavLink) */
+.portal-sidebar li a.active {
+  background-color: #4B0082;
+  color: #ffffff;
+}
+
+.btn-logout {
+  background-color: #fdeeee;
+  color: #c92a2a;
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s;
+}
+
+.btn-logout:hover {
+  background-color: #fad2d2;
+}
+
+.portal-content {
+  flex: 1;
+  padding: 2rem 3rem;
+  overflow-y: auto;
+}
+
+/* --- Estilos de la Página de Suscripción --- */
+.portal-page h2 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.portal-page .portal-subtitle {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 2.5rem;
+}
+
+.portal-content .pricing-container {
+  padding: 0;
+  max-width: 100%;
+}
+
+/* ¡El resaltado del plan actual! */
+.pricing-card.plan-actual {
+  border: 3px solid #4B0082;
+  box-shadow: 0 10px 30px rgba(75, 0, 130, 0.2);
+  transform: scale(1.03);
+}
+
+/* Botón de plan actual */
+.pricing-card .btn-submit.btn-disabled {
+  background-color: #a0a0a0;
+  cursor: default;
+  opacity: 0.7;
+}
+
+/* Estilos para los features (basado en tu captura) */
+.features-list {
+  text-align: left;
+  margin-bottom: 2rem;
+  list-style: none;
+  padding-left: 0;
+}
+
+.features-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+  color: #333;
+}
+
+.features-list li.feature-disabled {
+  color: #999;
+  text-decoration: line-through;
+}
+
+.features-list .icon-check {
+  color: #28a745; /* Verde */
+}
+
+.features-list .icon-times {
+  color: #dc3545; /* Rojo */
+}
+/* --- Estilos para src/portal/Perfiles.js --- */
+.profile-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.profile-card {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* Para móviles */
+}
+
+.profile-card-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.profile-card-avatar {
+  font-size: 3rem;
+  background-color: #f0e6ff;
+  width: 70px;
+  height: 70px;
+  border-radius: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-card-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+  display: block; /* Para que aparezca abajo */
+}
+
+.profile-card-details {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.profile-card-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap; /* Para móviles */
+}
+
+.btn-icon {
+  background-color: #f3f4f6;
+  color: #4b5563;
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.btn-icon:hover {
+  background-color: #e5e7eb;
+}
+
+.btn-icon.btn-danger {
+  background-color: #fdeeee;
+  color: #c92a2a;
+}
+
+.btn-icon.btn-danger:hover {
+  background-color: #fad2d2;
+}
+
+.btn-add-profile {
+  background-color: #4B0082;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+.btn-add-profile:hover {
+  background-color: #3a006a;
+}
+
+/* --- Estilos para src/portal/Cuenta.js --- */
+
+/* 1. El Grid de 2 columnas */
+.account-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Dos columnas */
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* 2. Tarjeta base para los formularios */
+.portal-form-card {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+}
+
+.portal-form-card h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #4B0082;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* 3. Estilos de formulario (heredan de Auth.css pero mejorados) */
+.portal-form-card .form-group {
+  margin-bottom: 1rem;
+}
+
+.portal-form-card .form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.portal-form-card .form-group input {
+  width: 100%;
+  box-sizing: border-box; /* Importante para que el padding no rompa el ancho */
+  padding: 0.75rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.portal-form-card .btn-submit {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.85rem; /* Un poco más pequeño que el de login */
+  font-size: 1rem;
+}
+
+.portal-form-card .btn-secondary {
+  background-color: #f0e6ff;
+  color: #4B0082;
+}
+.portal-form-card .btn-secondary:hover {
+  background-color: #e0cffc;
+}
+
+.portal-form-card .form-divider {
+  border: 0;
+  border-top: 1px solid #e0e0e0;
+  margin: 1.5rem 0;
+}
+
+
+/* 4. Estilos para los Toggles de Notificación */
+.notification-prefs {
+  margin-top: 2rem;
+}
+
+.toggle-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.toggle-group:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.toggle-group label:first-child {
+  flex: 1;
+  padding-right: 1rem;
+}
+.toggle-group label p {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0.25rem 0 0 0;
+}
+
+/* El switch del toggle */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px; /* Ancho */
+  height: 28px; /* Alto */
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 28px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #4B0082; /* Tu color principal */
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+/* --- Estilos para src/portal/Progreso.js --- */
+
+.report-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 2 columnas */
+  gap: 2rem;
+}
+
+/* Tarjeta base para los reportes */
+.report-card {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+}
+
+/* Tarjeta de Bienestar (ocupa 2 columnas) */
+.report-card-full {
+  grid-column: 1 / -1;
+}
+
+.report-card h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #4B0082;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.report-card p {
+  font-size: 1rem;
+  color: #666;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+/* --- Gráfico de Barras (Emociones) --- */
+.bar-chart-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.bar-chart-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.bar-chart-icon {
+  font-size: 1.2rem;
+  width: 20px;
+}
+.bar-chart-label {
+  width: 100px;
+  font-weight: 500;
+  color: #333;
+  text-transform: capitalize;
+}
+.bar-chart-bar {
+  flex: 1;
+  background-color: #f3f4f6;
+  border-radius: 8px;
+  height: 20px;
+  overflow: hidden;
+}
+.bar-chart-fill {
+  height: 100%;
+  background-color: #4B0082;
+  border-radius: 8px;
+  transition: width 0.5s ease-out;
+}
+.bar-chart-percent {
+  width: 50px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* --- Insignias (Valores) --- */
+.badge-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.value-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.value-badge.completed {
+  background-color: #e0fdf4; /* Verde menta */
+  color: #0d7c71;
+}
+.value-badge.pending {
+  background-color: #f3f4f6; /* Gris */
+  color: #6b7280;
+}
+
+/* --- Economía (Monedas) --- */
+.economy-balance {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+.economy-balance span:first-child {
+  font-size: 1.1rem;
+  color: #666;
+  font-weight: 500;
+}
+.economy-balance .economy-total {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #4B0082;
+}
+.economy-details p {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+  margin: 0.5rem 0;
+}
+.economy-details p span {
+  font-weight: 600;
+}
+.economy-details p:first-child span {
+  color: #28a745; /* Verde */
+}
+.economy-details p:last-child span {
+  color: #dc3545; /* Rojo */
+}
+
+/* Responsivo para el grid */
+@media (max-width: 992px) {
+  .report-grid {
+    grid-template-columns: 1fr; /* 1 columna en pantallas pequeñas */
+  }
+}
+
+
+/* 5. Estilos para la Zona de Peligro */
+.danger-zone {
+  margin-top: 2rem;
+  background-color: #fff6f6;
+  border: 1px solid #f8d7da;
+}
+.danger-zone h3 {
+  color: #c92a2a;
+}
+.danger-zone p {
+  color: #721c24;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.85rem 1rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+.btn-danger:hover {
+  background-color: #c82333;
+}
+
+
+/* --- Estilos para src/portal/Cuenta.js --- */
+.account-forms-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Dos columnas */
+  gap: 2rem;
+  max-width: 1000px;
+}
+
+.account-form {
+  padding: 2rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  background: #fff;
+}
+
+.account-form h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #4B0082;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+/* Reutilizamos .form-group y .btn-submit de Auth.css */
+/* Pero aseguramos que los inputs tengan ancho completo */
+.account-form .form-group input {
+  width: 100%;
+  box-sizing: border-box; /* Importante */
+  padding: 0.75rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+.account-form .form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+.account-form .btn-submit {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+/* Media query para hacer responsivo */
+@media (max-width: 992px) {
+  .account-forms-container {
+    grid-template-columns: 1fr;
+  }
+  .portal-content {
+    padding: 1.5rem;
+  }
+  .profile-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}
