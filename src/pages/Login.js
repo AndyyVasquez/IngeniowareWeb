@@ -5,6 +5,7 @@ import '../css/Auth.css';
 
 const Login = () => {
   const navigate = useNavigate();
+  
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -18,56 +19,57 @@ const Login = () => {
       [e.target.name]: e.target.value,
     });
   };
-const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
 
-    // Simulación de login
-    setTimeout(() => {
-      console.log('Login:', formData);
-      
-      // --- ¡CAMBIO CLAVE AQUÍ! ---
-      
-      // 1. Simulamos el token de sesión del padre
-      const fakeToken = 'jwt-token-simulado-12345';
-      localStorage.setItem('authToken', fakeToken);
-      
-      // 2. Simulamos la LISTA de niños que este padre tiene
-      const childDataList = [
-        {
-          id: 'child_1',
-          nombre_completo: 'Santiago Matias Lozano',
-          apodo: 'Santi',
-          avatar_emoji: '🦁',
-          edad_nino: 7,
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('http://localhost:3000/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-        // {
-        //   id: 'child_2',
-        //   nombre_completo: 'Sofía Pérez',
-        //   apodo: 'Sofi',
-        //   avatar_emoji: '🦄',
-        //   edad_nino: 5,
-        // }
-      ];
-      // Guardamos la LISTA en localStorage
-      localStorage.setItem('childDataList', JSON.stringify(childDataList));
-      
-      // 3. Simulamos los datos del padre (para la pág de "Mi Cuenta")
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Error al iniciar sesión');
+      }
+
+      console.log('Login Exitoso:', data);
+      //Guardar Token
+      localStorage.setItem('authToken', data.token);
+
+      // Guardamos los datos del padre
       const parentData = {
-        nombre: 'Juan',
-        apellidos: 'Pérez García',
-        email: formData.email,
+        id: data.user.id_pad,
+        nombre: data.user.nombre,
+        apellidos: data.user.apellidos,
+        email: data.user.email,
       };
       localStorage.setItem('parentData', JSON.stringify(parentData));
+      //Datos de los hijos guardados
+      if (data.user.hijos && data.user.hijos.length > 0) {
+        localStorage.setItem('childDataList', JSON.stringify(data.user.hijos));
+      } else {
+        // Si no tiene hijos aún, guardamos una lista vacía para evitar errores
+        localStorage.setItem('childDataList', JSON.stringify([]));
+      }
+      navigate('/portal', { replace: true });
 
-      setIsLoading(false);
-      
-      // 4. Redirigimos al portal
-      navigate('/portal', { replace: true }); // Lo mandamos directo a Perfiles
-      
-
-    }, 1500);
-  };
+    } catch (error) {
+      console.error('Error de conexión:', error);
+      alert(error.message || 'No se pudo conectar con el servidor. Revisa que esté encendido.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="auth-page">
@@ -108,7 +110,7 @@ const handleSubmit = async (e) => {
               <div className="input-wrapper">
                 <FaLock className="input-icon" />
                 <input
-                  type={showPassword ? 'text' : 'password'}
+                  type="password"
                   id="password"
                   name="password"
                   placeholder="••••••••"
@@ -137,7 +139,7 @@ const handleSubmit = async (e) => {
             </div>
 
             <button type="submit" className="btn-submit" disabled={isLoading}>
-              {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+              {isLoading ? 'Conectando...' : 'Iniciar Sesión'}
             </button>
           </form>
 
@@ -152,6 +154,13 @@ const handleSubmit = async (e) => {
                 Regístrate aquí
               </Link>
             </p>
+            
+            {/* Link discreto al Admin */}
+            <div style={{ marginTop: '2rem', opacity: 0.5, fontSize: '0.8rem' }}>
+              <Link to="/admin-login" style={{ color: '#999', textDecoration: 'none' }}>
+                 Admin
+              </Link>
+            </div>
           </div>
         </div>
       </div>

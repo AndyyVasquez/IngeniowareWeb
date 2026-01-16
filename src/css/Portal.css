@@ -922,6 +922,328 @@ input:checked + .slider:before {
   margin-bottom: 1.5rem;
 }
 
+/* --- ESTILOS DE TABLAS ADMIN --- */
+.admin-table-container {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    overflow-x: auto; /* Para que no rompa en pantallas pequeñas */
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+.admin-table th, .admin-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.admin-table th {
+    background-color: #f8f9fa;
+    color: #666;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+.admin-table tr:hover {
+    background-color: #f1f5f9;
+}
+
+/* Badges de Planes */
+.badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+.badge.plan-básico { background-color: #e0f2f1; color: #00695c; }
+.badge.plan-premium { background-color: #f3e5f5; color: #7b1fa2; }
+.badge.plan-familiar { background-color: #fce4ec; color: #c2185b; }
+
+/* Indicadores de Estado */
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    text-transform: capitalize;
+    font-size: 0.9rem;
+}
+.status-indicator.activo { color: #28a745; }
+.status-indicator.inactivo { color: #6c757d; }
+.status-indicator.bloqueado { color: #dc3545; }
+
+/* Botones de Acción Pequeños */
+.btn-icon-small {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+    font-size: 1rem;
+    padding: 5px;
+    transition: color 0.2s;
+}
+.btn-icon-small:hover { color: #4B0082; }
+.btn-icon-small.btn-danger:hover { color: #dc3545; }
+.btn-icon-small.btn-warn:hover { color: #ffc107; }
+
+.action-buttons {
+    display: flex;
+    gap: 5px;
+}
+.admin-content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.content-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    border: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+}
+
+.content-card-img {
+    height: 160px;
+    background-size: cover;
+    background-position: center;
+    background-color: #e0e0e0;
+    position: relative;
+}
+
+.content-card-img .badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    text-transform: capitalize;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Colores para los badges de valores */
+.badge.value-honestidad { background-color: #4ECDC4; color: #005f56; }
+.badge.value-empatia { background-color: #FF6B6B; color: #fff; }
+.badge.value-generosidad { background-color: #FFD93D; color: #5c4a00; }
+.badge.value-responsabilidad { background-color: #A06CD5; color: #fff; }
+.badge.value-valentia { background-color: #ffa500; color: #fff; }
+
+.content-card-body {
+    padding: 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.content-card-body h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.content-card-body p {
+    font-size: 0.9rem;
+    color: #666;
+    flex-grow: 1;
+    margin-bottom: 1.5rem;
+    line-height: 1.4;
+}
+
+.content-actions {
+    display: flex;
+    gap: 0.5rem;
+    border-top: 1px solid #f0f0f0;
+    padding-top: 1rem;
+}
+
+.content-actions button {
+    flex: 1;
+    justify-content: center;
+}
+
+/* --- GESTIÓN DE TIENDA --- */
+
+/* Pestañas de Categoría */
+.admin-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1px;
+}
+
+.admin-tab {
+    background: none;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #666;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.admin-tab:hover {
+    color: #4B0082;
+    background-color: #f9f9f9;
+    border-radius: 5px 5px 0 0;
+}
+
+.admin-tab.active {
+    color: #4B0082;
+    border-bottom: 3px solid #4B0082;
+}
+
+/* Grid de Tienda */
+.store-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.store-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    border: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.store-card-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 0.5rem;
+}
+
+.store-price {
+    background-color: #FFA500;
+    color: white;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+}
+
+.store-actions-mini {
+    display: flex;
+    gap: 5px;
+}
+
+.store-actions-mini button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #999;
+    font-size: 0.9rem;
+    padding: 2px;
+}
+.store-actions-mini button:hover { color: #4B0082; }
+.store-actions-mini button.danger:hover { color: #dc3545; }
+
+.store-image-preview {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.store-image-preview img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.store-card-info {
+    text-align: center;
+}
+
+.store-card-info h4 {
+    margin: 0 0 0.25rem 0;
+    color: #333;
+}
+.store-card-info p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    color: #999;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 2px dashed #e0e0e0;
+}
+/* --- CONFIGURACIÓN ADMIN --- */
+.admin-config-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.admin-config-right-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-team-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.admin-team-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid #eee;
+}
+.admin-team-item:last-child {
+    border-bottom: none;
+}
+
+/* Responsivo */
+@media (max-width: 992px) {
+    .admin-config-grid {
+        grid-template-columns: 1fr;
+    }
+}
+/* --- Estilos específicos Admin --- */
+.admin-menu li a {
+    color: #b8c7ce !important; /* Gris claro */
+}
+.admin-menu li a:hover {
+    background-color: #2c3e50 !important;
+    color: #fff !important;
+}
+.admin-menu li a.active-admin {
+    background-color: #007bff !important; /* Azul activo */
+    color: #fff !important;
+    border-left: 4px solid #fff;
+}
+
 /* Reutilizamos .form-group y .btn-submit de Auth.css */
 /* Pero aseguramos que los inputs tengan ancho completo */
 .account-form .form-group input {

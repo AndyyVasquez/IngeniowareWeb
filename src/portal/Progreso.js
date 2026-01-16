@@ -173,7 +173,7 @@ const Progreso = () => {
           <button 
             className="btn-submit" 
             style={{marginTop: '1rem'}}
-            // onClick={() => navigate('/portal/enviar-refuerzo')} // (Asegúrate de crear esta ruta)
+           
           >
             <FaGift /> Enviar Recompensa
           </button>

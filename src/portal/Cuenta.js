@@ -1,10 +1,9 @@
 // src/portal/Cuenta.js
 import React, { useState, useEffect } from 'react';
 import { FaSave, FaShieldAlt, FaTrash, FaBell } from 'react-icons/fa';
-import '../css/Portal.css'; // Reutilizamos el CSS del portal
-import '../css/Auth.css';   // Reutilizamos el CSS de los formularios
+import '../css/Portal.css'; 
+import '../css/Auth.css';   
 
-// Simulación de datos del padre (vendrían del login/API)
 const mockParentData = {
   nombre: 'Juan',
   apellidos: 'Pérez García',
@@ -29,7 +28,6 @@ const Cuenta = () => {
     novedades: false,
   });
 
-  // Cargar datos simulados al inicio
   useEffect(() => {
     setInfo({
       nombre: mockParentData.nombre,
@@ -71,7 +69,7 @@ const Cuenta = () => {
     
     if (userInput === confirmText) {
       alert('Cuenta eliminada exitosamente. (Simulado)');
-      // Aquí llamarías a la lógica de logout
+
       localStorage.removeItem('authToken');
       window.location.href = '/'; // Redirigir a la home
     } else {

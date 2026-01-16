@@ -3,8 +3,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
-
-// --- 1. Importar los componentes nuevos ---
 import ProtectedRoute from './components/ProtectedRoute';
 import PortalLayout from './portal/PortalLayout';
 import Suscripcion from './portal/Suscripcion';
@@ -14,6 +12,15 @@ import Cuenta from './portal/Cuenta';
 import Progreso from './portal/Progreso';
 import Calendario from './portal/Calendario';
 import Recursos from './portal/Recursos';
+import LoginAdmin from './pages/LoginAdmin';
+import AdminLayout from './admin/AdminLayout';
+import AdminDashboard from './admin/AdminDashboard';
+import AdminRoute from './components/AdminRoute';
+import Usuarios from './admin/Usuarios';
+import GestionCuentos from './admin/GestionCuentos';
+import GestionTienda from './admin/GestionTienda';
+import Configuracion from './admin/Configuracion';
+import GestionCanciones  from './admin/GestorCanciones';
 
 import './App.css';
 
@@ -21,7 +28,6 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* --- 2. Rutas Públicas (Tu Landing) --- */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Register />} />
@@ -48,6 +54,20 @@ function App() {
         
         {/* Opcional: una ruta 'catch-all' para redirigir al inicio */}
         <Route path="*" element={<Navigate to="/" replace />} />
+
+      <Route path="/admin-login" element={<LoginAdmin />} />
+        
+        <Route element={<AdminRoute />}>
+            <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<Navigate to="/admin/dashboard" replace />} />
+                <Route path="dashboard" element={<AdminDashboard />} />
+                <Route path="usuarios" element={<Usuarios />} />
+                <Route path="contenido" element={<GestionCuentos />} />
+                <Route path="tienda" element={<GestionTienda />} />
+                <Route path="configuracion" element={<Configuracion />} />
+                <Route path="canciones" element={<GestionCanciones />} />
+            </Route>
+        </Route>x 
 
       </Routes>
     </Router>

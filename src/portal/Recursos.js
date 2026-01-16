@@ -1,41 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaBookOpen, FaChild, FaBrain, FaSearch } from 'react-icons/fa';
-import '../css/Portal.css'; // Reutilizamos el CSS del portal
-
-const todosLosArticulos = [
-  { 
-    id: 1, 
-    categoria: 'crianza', 
-    titulo: '3 formas de hablar sobre la empatía con tu hijo', 
-    resumen: 'Aprende a usar situaciones cotidianas para enseñar empatía, la habilidad más importante...',
-    img: 'https://images.pexels.com/photos/3931568/pexels-photo-3931568.jpeg?auto=compress&cs=tinysrgb&w=600',
-    tiempoLectura: 5,
-  },
-  { 
-    id: 2, 
-    categoria: 'valores', 
-    titulo: 'Manejando berrinches: ¿Qué hacer cuando dicen "No"?',
-    resumen: 'Los berrinches son normales. Te damos un plan de 3 pasos para manejarlos con calma y respeto.',
-    img: 'https://images.pexels.com/photos/4145763/pexels-photo-4145763.jpeg?auto=compress&cs=tinysrgb&w=600',
-    tiempoLectura: 7,
-  },
-  { 
-    id: 3, 
-    categoria: 'valores', 
-    titulo: 'La Honestidad: Más allá de "no decir mentiras"',
-    resumen: 'Tu hijo/a completó el juego de la Honestidad. Aquí te explicamos cómo reforzar esa lección en casa.',
-    img: 'https://images.pexels.com/photos/764681/pexels-photo-764681.jpeg?auto=compress&cs=tinysrgb&w=600',
-    tiempoLectura: 4,
-  },
-  { 
-    id: 4, 
-    categoria: 'app', 
-    titulo: 'Guía Rápida: Saca provecho al Diario de Valo',
-    resumen: 'El diario es una herramienta poderosa. Aprende a interpretar el reporte emocional...',
-    img: 'https://images.pexels.com/photos/4386321/pexels-photo-4386321.jpeg?auto=compress&cs=tinysrgb&w=600',
-    tiempoLectura: 3,
-  },
-];
+import '../css/Portal.css'; 
 
 const categorias = [
   { id: 'todos', nombre: 'Todos los artículos', icono: <FaBookOpen /> },
@@ -45,13 +10,34 @@ const categorias = [
 ];
 
 const Recursos = () => {
+  const [articulos, setArticulos] = useState([]); // Datos reales
+  const [isLoading, setIsLoading] = useState(true);
   const [filtro, setFiltro] = useState('todos');
   const [busqueda, setBusqueda] = useState('');
 
-  const articulosFiltrados = todosLosArticulos.filter(articulo => {
+  // --- CONEXIÓN CON API ---
+  useEffect(() => {
+    const fetchRecursos = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/recursos');
+        const data = await response.json();
+        if (data.success) {
+          setArticulos(data.recursos);
+        }
+      } catch (error) {
+        console.error("Error cargando recursos:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchRecursos();
+  }, []);
+  // -----------------------
+
+  const articulosFiltrados = articulos.filter(articulo => {
     const pasaFiltroCategoria = filtro === 'todos' || articulo.categoria === filtro;
     const pasaFiltroBusqueda = articulo.titulo.toLowerCase().includes(busqueda.toLowerCase()) || 
-                             articulo.resumen.toLowerCase().includes(busqueda.toLowerCase());
+                             articulo.contenido.toLowerCase().includes(busqueda.toLowerCase());
     return pasaFiltroCategoria && pasaFiltroBusqueda;
   });
 
@@ -76,7 +62,7 @@ const Recursos = () => {
       </div>
 
       <div className="recursos-container">
-        {/* --- Menú Lateral de Categorías --- */}
+        {/* --- Menú Lateral --- */}
         <nav className="recursos-sidebar">
           <h4>Categorías</h4>
           <ul>
@@ -95,23 +81,27 @@ const Recursos = () => {
 
         {/* --- Grid de Artículos --- */}
         <main className="recursos-grid">
-          {articulosFiltrados.length > 0 ? (
-            articulosFiltrados.map(articulo => (
-              <div key={articulo.id} className="resource-card">
-                <div className="resource-card-image" style={{backgroundImage: `url(${articulo.img})`}}></div>
-                <div className="resource-card-content">
-                  <span className="resource-card-categoria">{categorias.find(c => c.id === articulo.categoria).nombre}</span>
-                  <h3 className="resource-card-title">{articulo.titulo}</h3>
-                  <p className="resource-card-resumen">{articulo.resumen}</p>
-                  <div className="resource-card-footer">
-                    <span>{articulo.tiempoLectura} min de lectura</span>
-                    <a href="#" className="widget-link">Leer más →</a>
+          {isLoading ? <p>Cargando biblioteca...</p> : (
+            articulosFiltrados.length > 0 ? (
+              articulosFiltrados.map(articulo => (
+                <div key={articulo.id} className="resource-card">
+                  <div className="resource-card-image" style={{backgroundImage: `url(${articulo.imagen_url || 'https://via.placeholder.com/400'})`}}></div>
+                  <div className="resource-card-content">
+                    <span className="resource-card-categoria">{articulo.categoria}</span>
+                    <h3 className="resource-card-title">{articulo.titulo}</h3>
+                    <p className="resource-card-resumen">
+                        {articulo.contenido.substring(0, 100)}...
+                    </p>
+                    <div className="resource-card-footer">
+                      <span>{articulo.tiempo_lectura_min} min de lectura</span>
+                      <span className="widget-link">Leer más →</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))
-          ) : (
-            <p>No se encontraron artículos que coincidan con tu búsqueda.</p>
+              ))
+            ) : (
+              <p>No se encontraron artículos.</p>
+            )
           )}
         </main>
       </div>

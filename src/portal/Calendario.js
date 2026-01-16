@@ -1,57 +1,120 @@
-// src/portal/Calendario.js
 import React, { useState, useEffect } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
-import 'react-big-calendar/lib/css/react-big-calendar.css'; // ¡CSS de la librería!
-import '../css/Portal.css'; // Tu CSS personalizado
-import { FaCalendarPlus, FaTimes } from 'react-icons/fa';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import '../css/Portal.css';
+import { FaCalendarPlus, FaTimes, FaTrash } from 'react-icons/fa';
 
-// Configura el localizador de fechas para español
-require('moment/locale/es.js'); // Importa el idioma español
+require('moment/locale/es.js');
 const localizer = momentLocalizer(moment);
 
-// --- Simulación de Datos ---
-// Eventos que vienen AUTOMÁTICAMENTE de la app
-const hitosDeLaApp = [
-  {
-    id: 'h1',
-    title: '🏆 ¡Leo completó el juego de "Honestidad"!',
-    start: new Date(2025, 10, 8, 10, 0, 0), // (Año, Mes-1, Día, Hora)
-    end: new Date(2025, 10, 8, 10, 30, 0),
-    type: 'hito', // Para darle color
-  },
-  {
-    id: 'h2',
-    title: '🎁 ¡Sofi compró la "Corona" en el Armario!',
-    start: new Date(2025, 10, 10, 15, 0, 0),
-    end: new Date(2025, 10, 10, 15, 30, 0),
-    type: 'hito',
-  },
-];
-
-// Eventos que el PADRE añade
-const eventosPersonales = [
-  {
-    id: 'p1',
-    title: 'Cita con el dentista (Leo)',
-    start: new Date(2025, 10, 12, 9, 0, 0),
-    end: new Date(2025, 10, 12, 10, 0, 0),
-    type: 'personal',
-  },
-];
-// --- Fin Simulación ---
-
-
 const Calendario = () => {
-  const [eventos, setEventos] = useState([...hitosDeLaApp, ...eventosPersonales]);
+  const [eventos, setEventos] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [tituloEvento, setTituloEvento] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Función para dar estilo a cada evento
+  // Obtener ID del padre actual
+  const getParentId = () => {
+    const parentData = localStorage.getItem('parentData');
+    return parentData ? JSON.parse(parentData).id : null;
+  };
+
+  //Cargar eventos 
+  const fetchEventos = async () => {
+    const padreId = getParentId();
+    if (!padreId) return;
+
+    try {
+      const response = await fetch(`http://localhost:3000/api/calendario/${padreId}`);
+      const data = await response.json();
+      
+      if (data.success) {
+        // Convertimos las fechas de string (MySQL) a objetos Date (JS)  para que el calendario las entienda
+        const eventosFormateados = data.eventos.map(ev => ({
+            id: ev.id,
+            title: ev.titulo,
+            start: new Date(ev.fecha_inicio),
+            end: new Date(ev.fecha_fin || ev.fecha_inicio), // Si no hay fin, es igual al inicio
+            type: ev.es_hito_app ? 'hito' : 'personal',
+            desc: ev.descripcion
+        }));
+        setEventos(eventosFormateados);
+      }
+    } catch (error) {
+      console.error("Error cargando calendario:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchEventos();
+  }, []);
+
+  // Guardar evento
+  const handleGuardarEvento = async () => {
+    if (!tituloEvento.trim()) {
+      alert('Por favor, escribe un título.');
+      return;
+    }
+    
+    const padreId = getParentId();
+    const nuevoEvento = {
+      padre_id: padreId,
+      titulo: tituloEvento,
+      fecha_inicio: selectedSlot.start,
+      fecha_fin: selectedSlot.end,
+      descripcion: 'Creado desde el portal web'
+    };
+
+    try {
+        const response = await fetch('http://localhost:3000/api/calendario', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(nuevoEvento)
+        });
+        const data = await response.json();
+        
+        if (data.success) {
+            setModalVisible(false);
+            setTituloEvento('');
+            fetchEventos(); // Recargar lista
+        } else {
+            alert('Error al guardar');
+        }
+    } catch (error) {
+        alert('Error de conexión');
+    }
+  };
+
+  // Eliminar evento
+  const handleSelectEvent = async (event) => {
+    if (event.type === 'hito') {
+        alert(`🏆 Hito Logrado: ${event.title}\n(Generado automáticamente por la app)`);
+        return;
+    }
+
+    if(window.confirm(`¿Eliminar el evento "${event.title}"?`)) {
+        try {
+            await fetch(`http://localhost:3000/api/calendario/${event.id}`, { method: 'DELETE' });
+            fetchEventos(); // Recargar
+        } catch (error) {
+            alert('Error al eliminar');
+        }
+    }
+  };
+
+  const handleSelectSlot = (slotInfo) => {
+    setSelectedSlot(slotInfo);
+    setTituloEvento('');
+    setModalVisible(true);
+  };
+
   const eventStyleGetter = (event) => {
     const style = {
-      backgroundColor: event.type === 'hito' ? '#28a745' : '#4B0082', // Verde para hitos, morado para personal
+      backgroundColor: event.type === 'hito' ? '#28a745' : '#4B0082',
       borderRadius: '5px',
       opacity: 0.8,
       color: 'white',
@@ -61,70 +124,41 @@ const Calendario = () => {
     return { style };
   };
 
-  // Se activa al hacer clic en un día vacío del calendario
-  const handleSelectSlot = (slotInfo) => {
-    setSelectedSlot(slotInfo);
-    setTituloEvento('');
-    setModalVisible(true);
-  };
-
-  // Se activa al hacer clic en un evento que YA existe
-  const handleSelectEvent = (event) => {
-    alert(`Evento: ${event.title}\nTipo: ${event.type === 'hito' ? 'Hito de la App' : 'Personal'}`);
-  };
-
-  // Lógica del modal para guardar
-  const handleGuardarEvento = () => {
-    if (!tituloEvento.trim()) {
-      alert('Por favor, escribe un título para el evento.');
-      return;
-    }
-    
-    const nuevoEvento = {
-      id: `p${Date.now()}`,
-      title: tituloEvento,
-      start: selectedSlot.start,
-      end: selectedSlot.end,
-      type: 'personal',
-    };
-
-    setEventos([...eventos, nuevoEvento]);
-    setModalVisible(false);
-  };
-
   return (
     <div className="portal-page portal-calendar-page">
       <h2>Calendario Familiar</h2>
       <p className="portal-subtitle">
-        Revisa los hitos de tus hijos y añade tus propios eventos.
+        Organiza las actividades de la familia. Haz clic en un día para añadir un evento.
       </p>
       
       <div className="calendar-container">
-        <Calendar
-          localizer={localizer}
-          events={eventos}
-          startAccessor="start"
-          endAccessor="end"
-          style={{ height: '70vh' }} // 70% de la altura de la ventana
-          eventPropGetter={eventStyleGetter}
-          onSelectSlot={handleSelectSlot}
-          onSelectEvent={handleSelectEvent}
-          selectable={true} // Permite hacer clic en días vacíos
-          messages={{
-            next: "Sig >",
-            previous: "< Ant",
-            today: "Hoy",
-            month: "Mes",
-            week: "Semana",
-            day: "Día",
-            agenda: "Agenda",
-            noEventsInRange: "No hay eventos en este rango.",
-            showMore: total => `+ ${total} más`,
-          }}
-        />
+        {isLoading ? <p>Cargando agenda...</p> : (
+            <Calendar
+                localizer={localizer}
+                events={eventos}
+                startAccessor="start"
+                endAccessor="end"
+                style={{ height: '70vh' }}
+                eventPropGetter={eventStyleGetter}
+                onSelectSlot={handleSelectSlot}
+                onSelectEvent={handleSelectEvent}
+                selectable={true}
+                messages={{
+                    next: "Sig >",
+                    previous: "< Ant",
+                    today: "Hoy",
+                    month: "Mes",
+                    week: "Semana",
+                    day: "Día",
+                    agenda: "Agenda",
+                    noEventsInRange: "No hay eventos en este rango.",
+                    showMore: total => `+ ${total} más`,
+                }}
+            />
+        )}
       </div>
 
-      {/* --- Modal para Añadir Evento --- */}
+      {/* Modal Añadir */}
       {modalVisible && (
         <div className="portal-modal-overlay">
           <div className="portal-modal-card auth-card">
@@ -132,27 +166,25 @@ const Calendario = () => {
               <FaTimes />
             </button>
             <h3>Añadir Evento</h3>
-            <p>
-              Evento para el día: <strong>{moment(selectedSlot.start).format('LL')}</strong>
-            </p>
+            <p>Para el día: <strong>{moment(selectedSlot.start).format('LL')}</strong></p>
+            
             <div className="form-group">
-              <label htmlFor="tituloEvento">Título del Evento</label>
+              <label>Título del Evento</label>
               <input
                 type="text"
-                id="tituloEvento"
-                name="tituloEvento"
                 value={tituloEvento}
                 onChange={(e) => setTituloEvento(e.target.value)}
                 autoFocus
+                placeholder="Ej. Clase de Natación"
               />
             </div>
+            
             <button onClick={handleGuardarEvento} className="btn-submit">
               <FaCalendarPlus /> Guardar Evento
             </button>
           </div>
         </div>
       )}
-
     </div>
   );
 };
