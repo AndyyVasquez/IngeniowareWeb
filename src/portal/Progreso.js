@@ -1,15 +1,19 @@
-// src/portal/Progreso.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaChartPie, FaAward, FaCoins, FaGift, FaSadTear, FaSmile, FaAngry, FaShieldAlt, FaHeart, FaRocket } from 'react-icons/fa';
-import '../css/Portal.css'; // Reutilizamos el CSS del portal
+import { FaChartPie, FaAward, FaCoins, FaGift, FaSadTear, FaSmile, FaAngry, FaShieldAlt, FaHeart, FaRocket, FaHandHoldingHeart, FaFire } from 'react-icons/fa';
+import API_URL from '../config/api'; // Importamos la configuración real
+import '../css/Portal.css'; 
 
-// Definimos los valores aquí para el reporte (nombres e iconos)
-const valoresDB = {
-  honestidad: { nombre: 'Honestidad', icono: <FaShieldAlt /> },
-  empatia: { nombre: 'Empatía', icono: <FaHeart /> },
-  generosidad: { nombre: 'Generosidad', icono: <FaGift /> },
-  responsabilidad: { nombre: 'Responsabilidad', icono: <FaRocket /> },
+// Mapeo de iconos para los valores (basado en el nombre que viene de la BD)
+const getValorIcon = (nombreValor) => {
+  const nombre = nombreValor.toLowerCase();
+  if (nombre.includes('honestidad')) return <FaShieldAlt />;
+  if (nombre.includes('empatía') || nombre.includes('empatia')) return <FaHeart />;
+  if (nombre.includes('generosidad')) return <FaGift />;
+  if (nombre.includes('responsabilidad')) return <FaRocket />;
+  if (nombre.includes('paciencia')) return <FaHandHoldingHeart />;
+  if (nombre.includes('valentía') || nombre.includes('valentia')) return <FaFire />;
+  return <FaAward />; // Icono por defecto
 };
 
 // Iconos para emociones
@@ -17,104 +21,160 @@ const emocionIcono = {
   feliz: <FaSmile style={{ color: '#28a745' }} />,
   triste: <FaSadTear style={{ color: '#007bff' }} />,
   enojado: <FaAngry style={{ color: '#dc3545' }} />,
-//   preocupado: <FaWorry style={{ color: '#ffc107' }} />,
+  miedo: <FaSadTear style={{ color: '#6610f2' }} />, // Agregamos miedo por si acaso
 };
 
 const Progreso = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
-  const [childName, setChildName] = useState('tu hijo/a');
+  const [selectedChild, setSelectedChild] = useState(null);
   
-  // Estados para los 3 reportes
+  // Estados para los datos REALES
   const [emotionData, setEmotionData] = useState([]);
   const [valueProgress, setValueProgress] = useState({ completados: [], pendientes: [] });
-  const [economyData, setEconomyData] = useState({ balance: 0, ganadas: 0, gastadas: 0 });
+  const [economyData, setEconomyData] = useState({ balance: 0, logros: 0, racha: 0 });
 
   useEffect(() => {
-    // Simulamos la carga de todos los datos del niño
-    const loadReportData = async () => {
-      setIsLoading(true);
-      
-      // --- 1. Cargar Nombre del Niño ---
-      const childListStr = localStorage.getItem('childDataList');
-      if (childListStr) {
-        const childList = JSON.parse(childListStr);
-        if (childList.length > 0) {
-          setChildName(childList[0].apodo || childList[0].nombre_completo.split(' ')[0]);
+    loadRealData();
+  }, []);
+
+  const loadRealData = async () => {
+    setIsLoading(true);
+    try {
+        // 1. Obtener ID del Padre y buscar sus hijos
+        const parentData = JSON.parse(localStorage.getItem('parentData'));
+        if (!parentData) {
+            navigate('/login');
+            return;
+        }
+
+        // Llamamos a la API para tener la lista fresca de hijos
+        const resNinos = await fetch(`${API_URL}/ninos/${parentData.id}`);
+        const dataNinos = await resNinos.json();
+
+        if (dataNinos.success && dataNinos.ninos.length > 0) {
+            // Por defecto seleccionamos al primer hijo (puedes agregar un selector luego)
+            const hijo = dataNinos.ninos[0];
+            setSelectedChild(hijo);
+
+            // --- AHORA CARGAMOS LOS 3 REPORTES EN PARALELO ---
+            
+            // A) Reporte de Emociones (Diario)
+            const resDiario = await fetch(`${API_URL}/diario/${hijo.id}`);
+            const dataDiario = await resDiario.json();
+            processEmotionData(dataDiario.entradas || []);
+
+            // B) Reporte de Valores (Logros/Medallas)
+            const resLogros = await fetch(`${API_URL}/logros/${hijo.id}`);
+            const dataLogros = await resLogros.json();
+            processValuesData(dataLogros.trofeos || []);
+
+            // C) Reporte de Economía y Racha
+            const resProgreso = await fetch(`${API_URL}/progreso/${hijo.id}`);
+            const dataProgreso = await resProgreso.json();
+            if (dataProgreso.success) {
+                setEconomyData({
+                    balance: dataProgreso.stats.monedas,
+                    logros: dataProgreso.stats.logros,
+                    racha: dataProgreso.stats.racha
+                });
+            }
+
+        } else {
+            console.log("No se encontraron hijos registrados");
+        }
+
+    } catch (error) {
+        console.error("Error cargando reportes:", error);
+    } finally {
+        setIsLoading(false);
+    }
+  };
+
+  // Procesar datos crudos del diario para hacer la gráfica
+  const processEmotionData = (entradas) => {
+    if (entradas.length === 0) {
+        setEmotionData([]);
+        return;
+    }
+
+    const counts = entradas.reduce((acc, entry) => {
+      const emocion = entry.emocion ? entry.emocion.toLowerCase() : 'desconocido';
+      acc[emocion] = (acc[emocion] || 0) + 1;
+      return acc;
+    }, {});
+    
+    const totalEntries = entradas.length;
+    const emotionArray = Object.keys(counts).map(key => ({
+      nombre: key.charAt(0).toUpperCase() + key.slice(1), // Capitalizar
+      icono: emocionIcono[key] || <FaSmile />,
+      percent: (counts[key] / totalEntries) * 100,
+      count: counts[key]
+    })).sort((a, b) => b.percent - a.percent); // Ordenar por frecuencia
+    
+    setEmotionData(emotionArray);
+  };
+
+  // Separar trofeos ganados de los pendientes
+  const processValuesData = (trofeos) => {
+    const ganados = trofeos.filter(t => t.ganado);
+    const pendientes = trofeos.filter(t => !t.ganado);
+    setValueProgress({ completados: ganados, pendientes: pendientes });
+  };
+
+  const handleSendReward = async () => {
+      // Esta función es un ejemplo. Podrías llamar al endpoint /api/mensajes con monedas_regalo > 0
+      const amount = prompt("¿Cuántas monedas quieres regalarle por su buen comportamiento?");
+      if (amount && selectedChild) {
+        try {
+            const parentData = JSON.parse(localStorage.getItem('parentData'));
+            await fetch(`${API_URL}/mensajes`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    padre_id: parentData.id,
+                    nino_id: selectedChild.id,
+                    mensaje: "¡Te ganaste un premio por tu esfuerzo!",
+                    monedas_regalo: parseInt(amount)
+                })
+            });
+            alert(`¡Enviaste ${amount} monedas!`);
+            loadRealData(); // Recargar para ver el nuevo saldo
+        } catch (e) {
+            alert("Error al enviar recompensa");
         }
       }
-
-      // --- 2. Cargar Reporte de Emociones (del Diario) ---
-      // (Simulamos datos si no existen)
-      const journalStr = localStorage.getItem('diarioEntradas') || JSON.stringify([
-        { emocion: 'feliz' }, { emocion: 'feliz' }, { emocion: 'triste' },
-        { emocion: 'feliz' }, { emocion: 'enojado' }, { emocion: 'feliz' },
-      ]);
-      const journalEntries = JSON.parse(journalStr);
-      
-      const counts = journalEntries.reduce((acc, entry) => {
-        acc[entry.emocion] = (acc[entry.emocion] || 0) + 1;
-        return acc;
-      }, {});
-      
-      const totalEntries = journalEntries.length;
-      const emotionArray = Object.keys(counts).map(key => ({
-        nombre: key,
-        icono: emocionIcono[key] || <FaSmile />,
-        percent: totalEntries > 0 ? (counts[key] / totalEntries) * 100 : 0,
-      })).sort((a, b) => b.percent - a.percent); // Ordenar por más frecuente
-      
-      setEmotionData(emotionArray);
-
-      // --- 3. Cargar Progreso de Valores (de los Juegos) ---
-      const progressStr = localStorage.getItem('progresoJuegos') || JSON.stringify(['honestidad', 'empatia']);
-      const juegosCompletados = JSON.parse(progressStr);
-      
-      const todosLosValoresIds = Object.keys(valoresDB);
-      const completados = todosLosValoresIds
-        .filter(id => juegosCompletados.includes(id))
-        .map(id => valoresDB[id]);
-      
-      const pendientes = todosLosValoresIds
-        .filter(id => !juegosCompletados.includes(id))
-        .map(id => valoresDB[id]);
-
-      setValueProgress({ completados, pendientes });
-
-      // --- 4. Cargar Economía ---
-      const coinsStr = localStorage.getItem('monedas') || '50';
-      setEconomyData({
-        balance: parseInt(coinsStr, 10),
-        ganadas: 30, // Simulado
-        gastadas: 10, // Simulado
-      });
-
-      setIsLoading(false);
-    };
-
-    loadReportData();
-  }, []);
+  };
 
   if (isLoading) {
     return (
       <div className="portal-page">
         <h2>Reportes de Progreso</h2>
-        <p>Cargando reportes de {childName}...</p>
+        <p>Conectando con la base de datos...</p>
       </div>
     );
   }
 
+  if (!selectedChild) {
+      return (
+        <div className="portal-page">
+            <h2>Reportes de Progreso</h2>
+            <p>No se encontraron perfiles de niños asociados. Ve al inicio para crear uno.</p>
+        </div>
+      );
+  }
+
   return (
     <div className="portal-page">
-      <h2>Reportes de {childName}</h2>
+      <h2>Reportes de {selectedChild.nombre}</h2>
       <p className="portal-subtitle">
-        Analiza su bienestar emocional, progreso en valores y actividad económica.
+        Datos en tiempo real basados en su actividad en la app.
       </p>
 
       <div className="report-grid">
-        {/* --- 1. TARJETA DE BIENESTAR EMOCIONAL --- */}
+        {/* --- 1. TARJETA DE BIENESTAR EMOCIONAL (REAL) --- */}
         <div className="report-card report-card-full">
-          <h3><FaChartPie /> Bienestar Emocional (Últimos 30 días)</h3>
+          <h3><FaChartPie /> Historial de Emociones</h3>
           {emotionData.length > 0 ? (
             <div className="bar-chart-container">
               {emotionData.map(emocion => (
@@ -130,52 +190,65 @@ const Progreso = () => {
                   <span className="bar-chart-percent">{emocion.percent.toFixed(0)}%</span>
                 </div>
               ))}
+              <p style={{fontSize: '0.8rem', color: '#666', marginTop: '10px', textAlign:'center'}}>
+                Basado en {emotionData.reduce((a, b) => a + b.count, 0)} registros del diario.
+              </p>
             </div>
           ) : (
-            <p>Aún no hay suficientes datos del Diario de Valo para generar un reporte.</p>
+            <div style={{padding: '20px', textAlign: 'center', color: '#666'}}>
+                <p>Tu hijo aún no ha registrado emociones en su diario.</p>
+                <small>Cuando use la app móvil, verás aquí cómo se siente.</small>
+            </div>
           )}
         </div>
 
-        {/* --- 2. TARJETA DE PROGRESO DE VALORES --- */}
+        {/* --- 2. TARJETA DE PROGRESO DE VALORES (REAL) --- */}
         <div className="report-card">
-          <h3><FaAward /> Progreso de Valores</h3>
-          <p>Estos son los valores que {childName} ha completado en los juegos.</p>
-          <h4>Completados</h4>
+          <h3><FaAward /> Medallas y Valores</h3>
+          <p>Valores desbloqueados mediante juegos y cuentos.</p>
+          
+          <h4>Completados ({valueProgress.completados.length})</h4>
           <div className="badge-container">
             {valueProgress.completados.length > 0 ? valueProgress.completados.map(val => (
-              <span key={val.nombre} className="value-badge completed">
-                {val.icono} {val.nombre}
+              <span key={val.id} className="value-badge completed" title={val.descripcion}>
+                {getValorIcon(val.titulo)} {val.titulo}
               </span>
-            )) : <p>Ninguno aún.</p>}
+            )) : <p style={{fontSize:'0.9rem', color:'#999'}}>Aún no ha ganado medallas.</p>}
           </div>
+          
           <hr className="form-divider" />
-          <h4>Pendientes</h4>
+          
+          <h4>Por descubrir</h4>
           <div className="badge-container">
             {valueProgress.pendientes.map(val => (
-              <span key={val.nombre} className="value-badge pending">
-                {val.icono} {val.nombre}
+              <span key={val.id} className="value-badge pending">
+                {getValorIcon(val.titulo)} {val.titulo}
               </span>
             ))}
           </div>
         </div>
 
-        {/* --- 3. TARJETA DE ECONOMÍA --- */}
+        {/* --- 3. TARJETA DE ECONOMÍA (REAL) --- */}
         <div className="report-card">
-          <h3><FaCoins /> Resumen de Monedas</h3>
+          <h3><FaCoins /> Economía y Racha</h3>
+          
           <div className="economy-balance">
             <span>Balance Actual</span>
             <span className="economy-total">{economyData.balance} 🪙</span>
           </div>
+          
           <div className="economy-details">
-            <p>Ganadas (últ. 7 días): <span>+{economyData.ganadas} 🪙</span></p>
-            <p>Gastadas (últ. 7 días): <span>-{economyData.gastadas} 🪙</span></p>
+            {/* Como la API solo da totales, mostramos datos acumulados reales */}
+            <p>Logros Totales: <span>{economyData.logros} 🏆</span></p>
+            <p>Racha de uso: <span>{economyData.racha} días 🔥</span></p>
           </div>
+          
           <button 
             className="btn-submit" 
             style={{marginTop: '1rem'}}
-           
+            onClick={handleSendReward}
           >
-            <FaGift /> Enviar Recompensa
+            <FaGift /> Enviar Regalo (Monedas)
           </button>
         </div>
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../css/Portal.css'; 
+import API_URL from '../config/api';
 
 const Suscripcion = () => {
   const [loading, setLoading] = useState(false);
@@ -10,7 +11,7 @@ const Suscripcion = () => {
 
     try {
       // 1. Pedimos al Backend que cree el link de suscripción
-      const response = await fetch('http://localhost:3000/api/mp/crear-suscripcion', {
+      const response = await fetch(`${API_URL}/mp/crear-suscripcion`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

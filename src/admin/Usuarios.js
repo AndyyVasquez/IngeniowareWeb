@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaSearch, FaEdit, FaBan, FaTrash, FaCheckCircle, FaTimesCircle, FaChild } from 'react-icons/fa';
 import '../css/Portal.css'; 
+import API_URL from '../config/api';
 
 const Usuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
@@ -10,7 +11,7 @@ const Usuarios = () => {
   // --- 1. CARGAR USUARIOS REALES ---
   const fetchUsuarios = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/admin/usuarios');
+      const response = await fetch(`${API_URL}/admin/usuarios`);
       const data = await response.json();
       if (data.success) {
         setUsuarios(data.usuarios);
@@ -43,7 +44,7 @@ const Usuarios = () => {
 
     if(window.confirm(confirmMsg)) {
         try {
-            await fetch(`http://localhost:3000/api/admin/usuarios/${usuario.id}/estado`, {
+            await fetch(`${API_URL}/admin/usuarios/${usuario.id}/estado`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ estado: nuevoEstado })
@@ -59,7 +60,7 @@ const Usuarios = () => {
   const handleEliminar = async (id) => {
     if(window.confirm('ADVERTENCIA: Esto eliminará al padre y a TODOS sus hijos. ¿Continuar?')) {
         try {
-            await fetch(`http://localhost:3000/api/admin/usuarios/${id}`, { method: 'DELETE' });
+            await fetch(`${API_URL}/admin/usuarios/${id}`, { method: 'DELETE' });
             fetchUsuarios(); 
         } catch (error) {
             alert('Error al eliminar');

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaBookOpen, FaChild, FaBrain, FaSearch } from 'react-icons/fa';
 import '../css/Portal.css'; 
+import API_URL from '../config/api';
 
 const categorias = [
   { id: 'todos', nombre: 'Todos los artículos', icono: <FaBookOpen /> },
@@ -19,7 +20,7 @@ const Recursos = () => {
   useEffect(() => {
     const fetchRecursos = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/recursos');
+        const response = await fetch(`${API_URL}/recursos`);
         const data = await response.json();
         if (data.success) {
           setArticulos(data.recursos);

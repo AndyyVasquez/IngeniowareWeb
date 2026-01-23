@@ -7,7 +7,6 @@ const PortalLayout = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Borra el token simulado y redirige al inicio
     localStorage.removeItem('authToken');
     navigate('/');
   };

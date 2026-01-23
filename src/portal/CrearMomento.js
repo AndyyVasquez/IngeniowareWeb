@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaPaperPlane, FaGift, FaHeart } from 'react-icons/fa';
 import '../css/Portal.css'; 
+import API_URL from '../config/api';
 
 const CrearMomento = () => {
   const [ninos, setNinos] = useState([]);
@@ -13,7 +14,7 @@ const CrearMomento = () => {
   useEffect(() => {
     const parentData = JSON.parse(localStorage.getItem('parentData'));
     if (parentData) {
-        fetch(`http://localhost:3000/api/ninos/${parentData.id}`)
+        fetch(`${API_URL}/ninos/${parentData.id}`)
             .then(res => res.json())
             .then(data => {
                 if(data.success) {
@@ -32,7 +33,7 @@ const CrearMomento = () => {
     const parentData = JSON.parse(localStorage.getItem('parentData'));
 
     try {
-        const res = await fetch('http://localhost:3000/api/mensajes', {
+        const res = await fetch(`${API_URL}/mensajes`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

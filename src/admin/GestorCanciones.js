@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaMusic, FaTrash, FaUpload, FaPlayCircle } from 'react-icons/fa';
 import '../css/Portal.css'; 
+import API_URL from '../config/api';
 
 const GestionCanciones = () => {
   const [canciones, setCanciones] = useState([]);
@@ -14,7 +15,7 @@ const GestionCanciones = () => {
 
   const fetchCanciones = async () => {
     try {
-      const res = await fetch('http://localhost:3000/api/canciones');
+      const res = await fetch(`${API_URL}/canciones`);
       const data = await res.json();
       if (data.success) setCanciones(data.canciones);
     } catch (error) {
@@ -36,7 +37,7 @@ const GestionCanciones = () => {
     formData.append('audio_file', audioFile); 
 
     try {
-      const res = await fetch('http://localhost:3000/api/canciones', {
+      const res = await fetch(`${API_URL}/canciones`, {
         method: 'POST',
         body: formData // No lleva header Content-Type manual
       });
@@ -56,7 +57,7 @@ const GestionCanciones = () => {
 
   const handleDelete = async (id) => {
     if(window.confirm("¿Borrar canción?")) {
-        await fetch(`http://localhost:3000/api/canciones/${id}`, { method: 'DELETE' });
+        await fetch(`${API_URL}/canciones/${id}`, { method: 'DELETE' });
         fetchCanciones();
     }
   };

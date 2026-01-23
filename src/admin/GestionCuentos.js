@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaPlus, FaEdit, FaTrash, FaImage, FaTimes, FaBook } from 'react-icons/fa';
 import '../css/Portal.css'; 
+import API_URL from '../config/api';
 
 const GestionCuentos = () => {
   const [cuentos, setCuentos] = useState([]);
@@ -25,8 +26,9 @@ const GestionCuentos = () => {
     try {
       // Cargamos valores y cuentos en paralelo
       const [resValores, resCuentos] = await Promise.all([
-        fetch('http://localhost:3000/api/valores'),
-        fetch('http://localhost:3000/api/cuentos')
+        fetch(`${API_URL}/valores`),
+       
+        fetch(`${API_URL}/cuentos`)
       ]);
 
       const dataValores = await resValores.json();
@@ -73,8 +75,8 @@ const GestionCuentos = () => {
     e.preventDefault();
     
     const endpoint = isEditing 
-        ? `http://localhost:3000/api/cuentos/${formData.id}`
-        : 'http://localhost:3000/api/cuentos';
+        ? `${API_URL}/cuentos/${formData.id}`
+        : `${API_URL}/cuentos`;
     
     const method = isEditing ? 'PUT' : 'POST';
 
@@ -102,7 +104,7 @@ const GestionCuentos = () => {
   const handleDelete = async (id) => {
     if(window.confirm('¿Seguro que quieres eliminar este cuento?')) {
         try {
-            await fetch(`http://localhost:3000/api/cuentos/${id}`, { method: 'DELETE' });
+            await fetch(`${API_URL}/cuentos/${id}`, { method: 'DELETE' });
             fetchData(); // Recargar
         } catch (error) {
             alert('Error al eliminar');

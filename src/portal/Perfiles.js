@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaEdit, FaKey, FaTrash, FaPlus, FaTimes, FaUserAstronaut } from 'react-icons/fa';
 import '../css/Portal.css'; // Reutilizamos CSS
+import API_URL from '../config/api';
 
 const Perfiles = () => {
   const [perfiles, setPerfiles] = useState([]);
@@ -31,7 +32,7 @@ const Perfiles = () => {
     if (!padreId) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/api/ninos/${padreId}`);
+      const response = await fetch(`${API_URL}/ninos/${padreId}`);
       const data = await response.json();
       
       if (data.success) {
@@ -61,7 +62,7 @@ const Perfiles = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/api/ninos', {
+      const response = await fetch(`${API_URL}/ninos`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -90,7 +91,7 @@ const Perfiles = () => {
   const handleDeleteProfile = async (id, nombre) => {
     if (window.confirm(`¿Estás seguro de que quieres eliminar el perfil de ${nombre}?`)) {
       try {
-        const response = await fetch(`http://localhost:3000/api/ninos/${id}`, {
+        const response = await fetch(`${API_URL}/ninos/${id}`, {
           method: 'DELETE',
         });
         const data = await response.json();

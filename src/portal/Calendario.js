@@ -3,6 +3,7 @@ import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '../css/Portal.css';
+import API_URL from '../config/api';
 import { FaCalendarPlus, FaTimes, FaTrash } from 'react-icons/fa';
 
 require('moment/locale/es.js');
@@ -27,7 +28,7 @@ const Calendario = () => {
     if (!padreId) return;
 
     try {
-      const response = await fetch(`http://localhost:3000/api/calendario/${padreId}`);
+      const response = await fetch(`${API_URL}/calendario/${padreId}`);
       const data = await response.json();
       
       if (data.success) {
@@ -70,7 +71,7 @@ const Calendario = () => {
     };
 
     try {
-        const response = await fetch('http://localhost:3000/api/calendario', {
+        const response = await fetch(`${API_URL}/calendario`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(nuevoEvento)
@@ -98,7 +99,7 @@ const Calendario = () => {
 
     if(window.confirm(`¿Eliminar el evento "${event.title}"?`)) {
         try {
-            await fetch(`http://localhost:3000/api/calendario/${event.id}`, { method: 'DELETE' });
+            await fetch(`${API_URL}/calendario/${event.id}`, { method: 'DELETE' });
             fetchEventos(); // Recargar
         } catch (error) {
             alert('Error al eliminar');

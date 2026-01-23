@@ -7,14 +7,13 @@ import '../css/Portal.css'; // Reutilizamos los estilos del portal
 const Dashboard = () => {
   const [parentName, setParentName] = useState('');
   const [childList, setChildList] = useState([]);
-  
-  // Simulamos alertas y datos que vendrían de tu API/Context
+
   const [alertsCount, setAlertsCount] = useState(2); 
   const [nextEvent, setNextEvent] = useState('Noche de película (Viernes)');
   const [newArticle, setNewArticle] = useState('3 formas de hablar sobre la empatía');
 
   useEffect(() => {
-    // Cargar datos desde localStorage (simulando sesión)
+
     try {
       const parentDataStr = localStorage.getItem('parentData');
       if (parentDataStr) {

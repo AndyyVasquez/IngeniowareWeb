@@ -2,7 +2,6 @@ import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 
 const useAuth = () => {
-//Simulado en AsyncStorage por el momento
   const token = localStorage.getItem('authToken');
   
   // Si existe el token, el usuario está autenticado.

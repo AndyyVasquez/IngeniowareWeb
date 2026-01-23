@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaPlus, FaEdit, FaTrash, FaImage, FaTimes, FaTshirt, FaGlasses, FaRedhat, FaTree } from 'react-icons/fa';
 import '../css/Portal.css';
+import API_URL from '../config/api';
 
 const categorias = [
   { id: 'sombrero', nombre: 'Sombreros', icon: <FaRedhat /> },
@@ -30,7 +31,7 @@ const GestionTienda = () => {
   // --- 1. CARGAR ITEMS (GET) ---
   const fetchItems = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/tienda/items');
+      const response = await fetch(`${API_URL}/tienda/items`);
       const data = await response.json();
       if (data.success) {
         setItems(data.items);
@@ -65,7 +66,7 @@ const GestionTienda = () => {
   const handleDelete = async (id) => {
     if(window.confirm('¿Eliminar este artículo de la tienda?')) {
       try {
-        await fetch(`http://localhost:3000/api/tienda/items/${id}`, { method: 'DELETE' });
+        await fetch(`${API_URL}/tienda/items/${id}`, { method: 'DELETE' });
         fetchItems(); // Recargar lista
       } catch (error) {
         alert('Error al eliminar');
@@ -85,8 +86,8 @@ const GestionTienda = () => {
 
     const payload = { ...formData, precio: precioNumerico };
     const endpoint = isEditing 
-        ? `http://localhost:3000/api/tienda/items/${formData.id}`
-        : 'http://localhost:3000/api/tienda/items';
+        ? `${API_URL}/tienda/items/${formData.id}`
+        : `${API_URL}/tienda/items`;
     const method = isEditing ? 'PUT' : 'POST';
 
     try {
