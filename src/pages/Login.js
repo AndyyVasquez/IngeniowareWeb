@@ -155,13 +155,7 @@ const Login = () => {
                 Regístrate aquí
               </Link>
             </p>
-            
-            {/* Link discreto al Admin */}
-            <div style={{ marginTop: '2rem', opacity: 0.5, fontSize: '0.8rem' }}>
-              <Link to="/admin-login" style={{ color: '#999', textDecoration: 'none' }}>
-                 Admin
-              </Link>
-            </div>
+
           </div>
         </div>
       </div>

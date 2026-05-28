@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FaUserShield, FaLock, FaArrowLeft } from 'react-icons/fa';
 import '../css/Auth.css'; 
+import API_URL from '../config/api'; // Importamos la configuración de la API
+
 const LoginAdmin = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -17,19 +19,50 @@ const LoginAdmin = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
-    setTimeout(() => {
-      if (formData.email === 'admin@ingenioware.com' && formData.password === 'admin123') {
-        localStorage.setItem('adminToken', 'admin-secret-token');
+    try {
+        // 1. Petición REAL al servidor
+        const response = await fetch(`${API_URL}/admin/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            // 2. Guardar credenciales y ROL
+            localStorage.setItem('adminToken', data.token);
+            localStorage.setItem('adminRole', data.admin.role); // 'Super Admin' o 'Moderador'
+            localStorage.setItem('adminEmail', data.admin.email);
+            
+          // LoginAdmin.js (Fragmento)
+
+if (data.success) {
+    // ... guardar tokens ...
+    localStorage.setItem('adminRole', data.admin.role);
+
+    // REDIRECCIÓN INTELIGENTE
+    if (data.admin.role === 'SuperAdmin') {
         navigate('/admin/dashboard', { replace: true });
-      } else {
-        alert('Credenciales de administrador incorrectas');
+    } else {
+        // Si es moderador, lo mandamos directo a su trabajo
+        navigate('/admin/contenido', { replace: true });
+    }
+}
+        } else {
+            alert(data.message || 'Error al iniciar sesión');
+        }
+
+    } catch (error) {
+        console.error("Error:", error);
+        alert("No se pudo conectar con el servidor.");
+    } finally {
         setIsLoading(false);
-      }
-    }, 1000);
+    }
   };
 
   return (
@@ -83,7 +116,7 @@ const LoginAdmin = () => {
               disabled={isLoading}
               style={{ backgroundColor: '#2c3e50' }} 
             >
-              {isLoading ? 'Accediendo...' : 'Entrar al Panel'}
+              {isLoading ? 'Verificando...' : 'Entrar al Panel'}
             </button>
           </form>
             

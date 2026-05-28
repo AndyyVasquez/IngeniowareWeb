@@ -76,65 +76,311 @@
 }
 
 /* --- Estilos de la Página de Suscripción --- */
-.portal-page h2 {
-  font-size: 2.5rem;
-  color: #333;
-  margin-bottom: 0.5rem;
+/* --- NUEVA TABLA DE PRECIOS MODERNA (3 COLUMNAS) --- */
+
+.pricing-grid-3-cols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 columnas forzadas */
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  align-items: start; /* Para que no se estiren si tienen diferente altura */
 }
 
-.portal-page .portal-subtitle {
-  font-size: 1.1rem;
-  color: #666;
-  margin-bottom: 2.5rem;
+/* Tarjeta Base */
+.pricing-card-modern {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+  overflow: hidden; /* Para que el header no se salga de las esquinas redondeadas */
+  transition: transform 0.3s ease;
+  border: 1px solid #f0f0f0;
+  position: relative;
 }
 
-.portal-content .pricing-container {
-  padding: 0;
-  max-width: 100%;
+.pricing-card-modern:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.12);
 }
 
-/* ¡El resaltado del plan actual! */
-.pricing-card.plan-actual {
-  border: 3px solid #4B0082;
-  box-shadow: 0 10px 30px rgba(75, 0, 130, 0.2);
-  transform: scale(1.03);
+/* --- ENCABEZADOS DE COLOR --- */
+.card-header-modern {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: white;
 }
 
-/* Botón de plan actual */
-.pricing-card .btn-submit.btn-disabled {
-  background-color: #a0a0a0;
-  cursor: default;
-  opacity: 0.7;
+.card-header-modern h3 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: white !important; /* Forzamos blanco */
 }
 
-/* Estilos para los features (basado en tu captura) */
-.features-list {
-  text-align: left;
+.card-header-modern p {
+  margin: 5px 0 0 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
+  color: white !important;
+}
+
+/* Colores específicos según tu imagen */
+.header-basic {
+  background-color: #4ECDC4; /* Turquesa */
+}
+.header-premium {
+  background-color: #9b59b6; /* Morado Ingenioware */
+}
+.header-family {
+  background-color: #ff85a2; /* Rosa/Salmón */
+}
+
+/* --- CUERPO DE LA TARJETA --- */
+.card-body-modern {
+  padding: 2rem;
+  text-align: center;
+}
+
+/* Precio */
+.price-tag {
   margin-bottom: 2rem;
+  color: #333;
+}
+.price-tag .symbol {
+  font-size: 1.5rem;
+  vertical-align: top;
+  position: relative;
+  top: 5px;
+}
+.price-tag .amount {
+  font-size: 4rem;
+  font-weight: 800;
+  line-height: 1;
+}
+.price-tag .period {
+  font-size: 1rem;
+  color: #999;
+  font-weight: 500;
+}
+
+/* Lista */
+.features-list-modern {
   list-style: none;
-  padding-left: 0;
+  padding: 0;
+  margin: 0 0 2rem 0;
+  text-align: left; /* Alineado a la izquierda */
+}
+
+.features-list-modern li {
+  padding: 0.8rem 0;
+  border-bottom: 1px solid #f9f9f9;
+  color: #555;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.features-list-modern li:last-child {
+  border-bottom: none;
+}
+
+.features-list-modern .icon-check {
+  color: #2ecc71; /* Verde brillante */
+  min-width: 16px;
+}
+.features-list-modern .icon-times {
+  color: #ddd;
+  min-width: 16px;
+}
+.features-list-modern li.disabled {
+  color: #ccc;
+}
+
+/* Botones */
+.btn-modern {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 30px; /* Redondeado */
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1rem;
+  color: white;
+}
+.btn-modern:hover {
+  filter: brightness(90%); /* Oscurecer un poco al pasar mouse */
+}
+
+.btn-basic { background-color: #4ECDC4; }
+.btn-premium { background-color: #9b59b6; }
+.btn-family { background-color: #ff85a2; }
+
+/* --- DESTACADO (PREMIUM) --- */
+.pricing-card-modern.featured-modern {
+  transform: scale(1.05); /* Un poco más grande */
+  z-index: 2;
+  box-shadow: 0 10px 40px rgba(155, 89, 182, 0.2);
+  border: none;
+}
+.pricing-card-modern.featured-modern:hover {
+  transform: scale(1.05) translateY(-10px);
+}
+
+/* Listón "Más Popular" */
+.ribbon {
+  position: absolute;
+  top: 25px;
+  right: -30px;
+  background: #4B0082; /* Morado oscuro */
+  color: white;
+  padding: 5px 30px;
+  transform: rotate(45deg);
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Responsivo */
+@media (max-width: 900px) {
+  .pricing-grid-3-cols {
+    grid-template-columns: 1fr; /* Una sola columna en celular */
+    max-width: 400px;
+  }
+  .pricing-card-modern.featured-modern {
+    transform: scale(1); /* Quitar efecto de zoom en móvil */
+  }
+}
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsivo */
+  gap: 2rem;
+  max-width: 900px;
+  margin: 0 auto; /* Centrado */
+}
+
+.pricing-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 4rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid #eee;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+/* Efecto al pasar el mouse */
+.pricing-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Tarjeta Destacada (Premium) */
+.pricing-card.featured {
+  border: 2px solid #4B0082; /* Borde morado */
+  box-shadow: 0 10px 40px rgba(75, 0, 130, 0.15); /* Sombra morada suave */
+  background: linear-gradient(to bottom, #ffffff, #faf8ff); /* Degradado muy sutil */
+}
+
+/* Etiqueta de "Recomendado" */
+.badge-popular {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #4B0082;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Encabezado de la tarjeta */
+.card-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 1.5rem;
+}
+
+.pricing-card h3 {
+  font-size: 1.5rem;
+  color: #333;
+  margin: 0 0 0.5rem 0;
+}
+
+/* El Precio Grande */
+.price {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #333;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+/* El texto "/mes" pequeño */
+.price .period {
+  font-size: 1rem;
+  color: #999;
+  font-weight: 500;
+  margin-top: 10px;
+}
+
+/* Lista de beneficios */
+.features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem 0;
 }
 
 .features-list li {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.75rem;
+  gap: 10px;
+  margin-bottom: 12px;
   font-size: 1rem;
-  color: #333;
+  color: #555;
 }
 
+/* Icono de palomita */
+.features-list .icon-check {
+  color: #28a745; /* Verde */
+  font-size: 1.1rem;
+  min-width: 20px; /* Para que no se aplaste */
+}
+
+/* Elementos deshabilitados (del plan gratis) */
 .features-list li.feature-disabled {
-  color: #999;
+  color: #ccc;
   text-decoration: line-through;
 }
 
-.features-list .icon-check {
-  color: #28a745; /* Verde */
+/* Botón "Tu plan actual" */
+.btn-outline {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid #eee;
+  background: none;
+  border-radius: 8px;
+  color: #999;
+  font-weight: 600;
+  cursor: default;
 }
 
-.features-list .icon-times {
-  color: #dc3545; /* Rojo */
+/* Ajuste al botón de suscribirse */
+.pricing-card .btn-submit {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 15px rgba(75, 0, 130, 0.3);
 }
 /* --- Estilos para src/portal/Perfiles.js --- */
 .profile-list {
